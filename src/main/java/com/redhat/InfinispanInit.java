@@ -22,7 +22,7 @@ public class InfinispanInit {
    @ConfigProperty(name = "configureInfinispan")
    Boolean configureInfinispan;
 
-   void onStart(@Observes @Priority(value = 1) StartupEvent ev) {
+   void onStart(@Observes StartupEvent ev) {
       if(configureInfinispan) {
          try{
             cacheManager.administration()
@@ -32,7 +32,7 @@ public class InfinispanInit {
          }
 
          cacheManager.administration().getOrCreateCache(PlayerScore.PLAYERS_SCORES, INDEXED_PROTOBUF);
-         cacheManager.administration().getOrCreateCache(Shot.PLAYERS_SHOTS, "example.PROTOBUF_DIST");
+         cacheManager.administration().getOrCreateCache(Shot.PLAYERS_SHOTS, INDEXED_PROTOBUF);
       }
    }
 
