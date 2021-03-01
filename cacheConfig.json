@@ -1,0 +1,22 @@
+{
+  "distributed-cache": {
+    "mode": "SYNC",
+    "encoding": {
+      "key": {
+        "media-type": "application/x-protostream"
+      },
+      "value": {
+        "media-type": "application/x-protostream"
+      }
+    },
+    "indexing": {
+      "enabled":true,
+      "statistics": true,
+      "indexed-entities" : ["com.redhat.PlayerScore"]
+    },
+    "statistics": true,
+    "memory": {
+      "storage": "HEAP"
+    }
+  }
+}
