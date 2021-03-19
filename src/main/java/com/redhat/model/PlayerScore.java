@@ -13,18 +13,23 @@ public class PlayerScore implements Comparable {
    private String userId;
    private String matchId;
    private String gameId;
+   private String username;
    private Boolean human;
    private Integer score;
-   private Integer lastIncrement;
    private Long timestamp;
    private GameStatus gameStatus;
 
+   public PlayerScore() {
+
+   }
+
    @ProtoFactory
-   public PlayerScore(String userId, String matchId, String gameId, Boolean human, Integer score, Long timestamp,
+   public PlayerScore(String userId, String matchId, String gameId, String username, Boolean human, Integer score, Long timestamp,
                       GameStatus gameStatus) {
       this.userId = userId;
       this.matchId = matchId;
       this.gameId = gameId;
+      this.username = username;
       this.human = human;
       this.score = score;
       this.timestamp = timestamp;
@@ -87,6 +92,15 @@ public class PlayerScore implements Comparable {
    }
 
    @ProtoField(number = 4)
+   public String getUsername() {
+      return username;
+   }
+
+   public void setUsername(String username) {
+      this.username = username;
+   }
+
+   @ProtoField(number = 5)
    public Boolean isHuman() {
       return human;
    }
@@ -95,7 +109,7 @@ public class PlayerScore implements Comparable {
       this.human = human;
    }
 
-   @ProtoField(number = 5)
+   @ProtoField(number = 6)
    @ProtoDoc("@Field(index=Index.YES, analyze = Analyze.NO, store = Store.NO)")
    public Integer getScore() {
       return score;
@@ -105,7 +119,7 @@ public class PlayerScore implements Comparable {
       this.score = score;
    }
 
-   @ProtoField(number = 6)
+   @ProtoField(number = 7)
    @ProtoDoc("@Field(index=Index.YES, analyze = Analyze.NO, store = Store.NO)")
    public Long getTimestamp() {
       return timestamp;
@@ -115,7 +129,7 @@ public class PlayerScore implements Comparable {
       this.timestamp = timestamp;
    }
 
-   @ProtoField(number = 7)
+   @ProtoField(number = 8)
    public GameStatus getGameStatus() {
       return gameStatus;
    }

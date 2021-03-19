@@ -3,6 +3,7 @@ package com.redhat.api.rest;
 import com.redhat.model.GameStatus;
 import com.redhat.model.PlayerScore;
 import io.quarkus.infinispan.client.Remote;
+import io.vertx.core.json.JsonObject;
 import org.infinispan.client.hotrod.RemoteCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,10 +31,9 @@ public class ScoringResource {
    @Remote(PlayerScore.PLAYERS_SCORES)
    RemoteCache<String, PlayerScore> playersScores;
 
-   //TODO: Inject players to grab name
-//   @Inject
-//   @Remote("players")
-//   RemoteCache<String, String> players;
+   @Inject
+   @Remote("players")
+   RemoteCache<String, String> players;
 
    @GET
    public Response health() {
@@ -71,16 +71,14 @@ public class ScoringResource {
       String key = getKey(gameId, matchId, userId);
       PlayerScore playerScore = playersScores.get(key);
 
-
-
       if(playerScore == null) {
-         // TODO: Inject the players cache and fetch the user name from the Json Cache
-//         String player = players.get(userId);
-//         if (player != null) {
-//            // parse name
-//
-//         }
-         playerScore = new PlayerScore(userId, matchId, gameId, human, delta, timestamp, GameStatus.PLAYING);
+         String player = players.get(userId);
+         String username = "";
+         if (player != null) {
+            // parse name
+            username = new JsonObject(players.get(userId)).getString("username");
+         }
+         playerScore = new PlayerScore(userId, matchId, gameId, username, human, delta, timestamp, GameStatus.PLAYING);
       } else {
          playerScore.setScore(playerScore.getScore() + delta);
          playerScore.setTimestamp(timestamp);

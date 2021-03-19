@@ -19,7 +19,7 @@ public class InfinispanInit {
    @Inject
    RemoteCacheManager cacheManager;
 
-   @ConfigProperty(name = "configureInfinispan")
+   @ConfigProperty(name = "scoring.configure-infinispan")
    Boolean configureInfinispan;
 
    void onStart(@Observes StartupEvent ev) {

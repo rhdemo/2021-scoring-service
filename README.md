@@ -12,7 +12,7 @@ Health : `http GET http://localhost:8080/scoring`
 
 ### Create or Update a score
 
-` POST /scoring/g1/m1/u1?delta={delta}&human={human}&timestamp={timestamp}`
+`POST /scoring/g1/m1/u1?delta={delta}&human={human}&timestamp={timestamp}`
 
 * `gameId`: Generation or id game
 * `matchId`: the match id
@@ -86,6 +86,8 @@ http POST 'http://localhost:8080/shot/g1/m1/u1/12?type=SUNK&ship=CARRIER&human=t
 2. Build following the instructions the native or the jvm image (instructions in Dockerfile or Dockerfile.jvm)
 
 3. Run the application
+
+TIP: Use env variable `SCORING_CONFIGURE_INFINISPAN=true` to create caches
 
 ```shell script
 ./run-app.sh
