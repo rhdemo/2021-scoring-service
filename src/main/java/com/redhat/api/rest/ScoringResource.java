@@ -72,9 +72,9 @@ public class ScoringResource {
       PlayerScore playerScore = playersScores.get(key);
 
       if(playerScore == null) {
-         String player = players.get(userId);
+         String player = players != null ? players.get(userId) : "";
          String username = "";
-         if (player != null) {
+         if (player != null && player != "") {
             // parse name
             username = new JsonObject(players.get(userId)).getString("username");
          }
