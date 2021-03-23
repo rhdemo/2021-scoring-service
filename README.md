@@ -93,9 +93,8 @@ TIP: Use env variable `SCORING_CONFIGURE_INFINISPAN=true` to create caches
 ./run-app.sh
 ```
 Access 
-* Infinispan Console in `http://localhost:11222`. Log using admin/pass credentials
 * Leaderboard: `http://localhost:8080`
 
 
-`docker commit 93cee6062ce6 quay.io/redhatdemo/2021-scoring-service`
+`docker commit b1ac5f9b0aab quay.io/redhatdemo/2021-scoring-service`
 `docker push quay.io/redhatdemo/2021-scoring-service`

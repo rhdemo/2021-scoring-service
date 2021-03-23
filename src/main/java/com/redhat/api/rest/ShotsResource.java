@@ -5,6 +5,8 @@ import com.redhat.model.Shot;
 import com.redhat.model.ShotType;
 import io.quarkus.infinispan.client.Remote;
 import org.infinispan.client.hotrod.RemoteCache;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -24,6 +26,8 @@ import javax.ws.rs.core.Response;
 @ApplicationScoped
 public class ShotsResource {
 
+   private static final Logger LOGGER = LoggerFactory.getLogger(ShotsResource.class.getName());
+
    @Inject
    @Remote(Shot.PLAYERS_SHOTS)
    RemoteCache<String, Shot> shots;
@@ -37,6 +41,11 @@ public class ShotsResource {
                        @QueryParam("type") String type,
                        @QueryParam("ship") String ship,
                        @QueryParam("human") boolean human) {
+
+      if (shots == null) {
+         LOGGER.error("Unable score, shots cache does not exist.");
+      }
+
       String key =  gameId + '-' + matchId + '-' + userId +  '-' + timestamp;
 
       ShipType shipType = null;

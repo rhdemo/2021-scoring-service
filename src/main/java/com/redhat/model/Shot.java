@@ -1,10 +1,12 @@
 package com.redhat.model;
 
+import org.infinispan.protostream.annotations.ProtoDoc;
 import org.infinispan.protostream.annotations.ProtoFactory;
 import org.infinispan.protostream.annotations.ProtoField;
 
 import java.util.Objects;
 
+@ProtoDoc("@Indexed")
 public class Shot {
    private String userId;
    private String matchId;
@@ -56,6 +58,7 @@ public class Shot {
    }
 
    @ProtoField(number = 4)
+   @ProtoDoc("@Field(index=Index.YES, analyze = Analyze.NO, store = Store.NO)")
    public Boolean isHuman() {
       return human;
    }
@@ -65,6 +68,7 @@ public class Shot {
    }
 
    @ProtoField(number = 5)
+   @ProtoDoc("@Field(index=Index.YES, analyze = Analyze.NO, store = Store.NO)")
    public Long getTimestamp() {
       return timestamp;
    }
@@ -74,6 +78,7 @@ public class Shot {
    }
 
    @ProtoField(number = 6)
+   @ProtoDoc("@Field(index=Index.YES, analyze = Analyze.NO, store = Store.NO)")
    public ShotType getShotType() {
       return shotType;
    }
@@ -83,6 +88,7 @@ public class Shot {
    }
 
    @ProtoField(number = 7)
+   @ProtoDoc("@Field(index=Index.YES, analyze = Analyze.NO, store = Store.NO)")
    public ShipType getShipType() {
       return shipType;
    }

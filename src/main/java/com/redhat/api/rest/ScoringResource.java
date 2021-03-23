@@ -68,7 +68,12 @@ public class ScoringResource {
                          @QueryParam("delta") int delta,
                          @QueryParam("human") boolean human,
                          @QueryParam("timestamp") long timestamp) {
+      if(playersScores == null) {
+         LOGGER.error("Unable score, players-score cache does not exist.");
+      }
+
       String key = getKey(gameId, matchId, userId);
+
       PlayerScore playerScore = playersScores.get(key);
 
       if(playerScore == null) {
@@ -89,6 +94,10 @@ public class ScoringResource {
    }
 
    private Response handleGameOver(String gameId, String matchId, String userId, Long timestamp, GameStatus status) {
+      if(playersScores == null) {
+         LOGGER.error("Unable score, players-score cache does not exist.");
+      }
+
       String key = getKey(gameId, matchId, userId);
       PlayerScore playerScore = playersScores.get(key);
 
