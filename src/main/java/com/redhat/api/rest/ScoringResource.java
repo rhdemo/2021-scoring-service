@@ -3,7 +3,6 @@ package com.redhat.api.rest;
 import com.redhat.model.GameStatus;
 import com.redhat.model.PlayerScore;
 import io.quarkus.infinispan.client.Remote;
-import io.vertx.core.json.JsonObject;
 import org.infinispan.client.hotrod.RemoteCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,10 +29,6 @@ public class ScoringResource {
    @Inject
    @Remote(PlayerScore.PLAYERS_SCORES)
    RemoteCache<String, PlayerScore> playersScores;
-
-   @Inject
-   @Remote("players")
-   RemoteCache<String, String> players;
 
    @GET
    public Response health() {
@@ -67,7 +62,9 @@ public class ScoringResource {
                          @PathParam("userId") String userId,
                          @QueryParam("delta") int delta,
                          @QueryParam("human") boolean human,
-                         @QueryParam("timestamp") long timestamp) {
+                         @QueryParam("timestamp") long timestamp,
+                         @QueryParam("bonus") Boolean bonus,
+                         @QueryParam("username") String username) {
       if(playersScores == null) {
          LOGGER.error("Unable score, players-score cache does not exist.");
       }
@@ -77,19 +74,20 @@ public class ScoringResource {
       PlayerScore playerScore = playersScores.get(key);
 
       if(playerScore == null) {
-         String player = players != null ? players.get(userId) : "";
-         String username = "";
-         if (player != null && player != "") {
-            // parse name
-            username = new JsonObject(players.get(userId)).getString("username");
-         }
-         playerScore = new PlayerScore(userId, matchId, gameId, username, human, delta, timestamp, GameStatus.PLAYING);
+         // username
+         String usernameDecoded = username.replaceAll("%20", " ");
+         playerScore = new PlayerScore(userId, matchId, gameId, usernameDecoded, human, delta, timestamp, GameStatus.PLAYING, 0);
       } else {
          playerScore.setScore(playerScore.getScore() + delta);
          playerScore.setTimestamp(timestamp);
       }
 
+      if(bonus!= null && bonus.booleanValue()) {
+         playerScore.setBonus(playerScore.getBonus() + 1);
+      }
+
       playersScores.put(key, playerScore);
+
       return Response.accepted().build();
    }
 

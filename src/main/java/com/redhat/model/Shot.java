@@ -49,6 +49,7 @@ public class Shot {
    }
 
    @ProtoField(number = 3)
+   @ProtoDoc("@Field(index=Index.YES, analyze = Analyze.NO, store = Store.NO)")
    public String getGameId() {
       return gameId;
    }

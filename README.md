@@ -12,7 +12,7 @@ Health : `http GET http://localhost:8080/scoring`
 
 ### Create or Update a score
 
-`POST /scoring/g1/m1/u1?delta={delta}&human={human}&timestamp={timestamp}`
+`POST /scoring/g1/m1/u1?delta={delta}&human={human}&timestamp={timestamp}&bonus={bonus}`
 
 * `gameId`: Generation or id game
 * `matchId`: the match id
@@ -20,6 +20,7 @@ Health : `http GET http://localhost:8080/scoring`
 * `delta`: increment of the score
 * `human`: `true` for humans, `false` for AI
 * `timestamp`: long milliseconds number 
+* `bonus`: `true` for bonus scoring
 
 Example: 
 ```bash 
@@ -48,7 +49,7 @@ http POST 'http://localhost:8080/scoring/g1/m1/u1/win?timestamp=1223'
 * `gameId`: Generation or id game
 * `matchId`: the match id
 * `userId`: player id that has lost the match
-* `timestamp`: long milliseconds number 
+* `timestamp`: long milliseconds number
 
 ```bash 
 http POST 'http://localhost:8080/scoring/g1/m1/u1/loss?timestamp=1223'
@@ -60,10 +61,10 @@ http POST 'http://localhost:8080/scoring/g1/m1/u1/loss?timestamp=1223'
 
 * `gameId`: Generation or id game
 * `matchId`: the match id
-* `userId`: player id that has lost the match
+* `userId`: player id that has performed a shot in the match
 * `timestamp`: long milliseconds number 
 * `type`: shot type: `HIT`, `MISS` or `SUNK`
-* `ship`: optional parameter. ship type `CARRIER` or `SUBMARINE`
+* `ship`: optional parameter. ship type `CARRIER`, `SUBMARINE`, `BATTLESHIP`, `DESTROYER`
 * `human`: `true` for humans, `false` for AI
 
 ```bash 
@@ -96,5 +97,5 @@ Access
 * Leaderboard: `http://localhost:8080`
 
 
-`docker commit b1ac5f9b0aab quay.io/redhatdemo/2021-scoring-service`
+`docker commit 3a9e00bf865f quay.io/redhatdemo/2021-scoring-service`
 `docker push quay.io/redhatdemo/2021-scoring-service`
