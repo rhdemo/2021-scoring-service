@@ -32,9 +32,69 @@ public class ScoringResource {
 
    @GET
    public Response health() {
+      if(playersScores == null) {
+         LOGGER.error("players-score cache does not exist.");
+         return Response.ok("players-score cache does not exist.").build();
+      }
       int size = playersScores.size();
       LOGGER.info("Connected players size " + size);
       return Response.ok("Scoring Resource is ready. Cache players size " + size).build();
+   }
+
+   @POST
+   @Path("/{gameId}/{matchId}/{userId}")
+   public Response score(@PathParam("gameId") String gameId,
+                         @PathParam("matchId") String matchId,
+                         @PathParam("userId") String userId,
+                         @QueryParam("delta") int delta,
+                         @QueryParam("human") boolean human,
+                         @QueryParam("timestamp") long timestamp,
+                         @QueryParam("bonus") Boolean bonus,
+                         @QueryParam("username") String username) {
+      Response response = scoringServiceError();
+      if (response != null) {
+         return response;
+      }
+
+      String key = getKey(gameId, matchId, userId);
+
+      PlayerScore playerScore = playersScores.get(key);
+
+      if(playerScore == null) {
+         // username
+         String usernameDecoded = username != null ? username.replaceAll("%20", " ") : "";
+         playerScore = new PlayerScore(userId, matchId, gameId, usernameDecoded, human, delta, timestamp, GameStatus.PLAYING, 0);
+      } else {
+         playerScore.setScore(playerScore.getScore() + delta);
+         playerScore.setTimestamp(timestamp);
+      }
+
+      if(bonus!= null && bonus.booleanValue()) {
+         playerScore.setBonus(playerScore.getBonus() + 1);
+      }
+
+      playersScores.put(key, playerScore);
+
+      return Response.accepted().build();
+   }
+
+   @GET
+   @Path("/{gameId}/{matchId}/{userId}/score")
+   public Response getScore(@PathParam("gameId") String gameId,
+                          @PathParam("matchId") String matchId,
+                          @PathParam("userId") String userId) {
+      Response response = scoringServiceError();
+      if (response != null) {
+         return response;
+      }
+
+      String key = getKey(gameId, matchId, userId);
+      PlayerScore playerScore = playersScores.get(key);
+      if (playerScore == null) {
+         return Response.status(Response.Status.NOT_FOUND).build();
+      }
+
+      return Response.ok(playerScore, MediaType.APPLICATION_JSON_TYPE).build();
    }
 
    @POST
@@ -55,45 +115,10 @@ public class ScoringResource {
       return handleGameOver(gameId, matchId, userId, timestamp, GameStatus.LOSS);
    }
 
-   @POST
-   @Path("/{gameId}/{matchId}/{userId}")
-   public Response score(@PathParam("gameId") String gameId,
-                         @PathParam("matchId") String matchId,
-                         @PathParam("userId") String userId,
-                         @QueryParam("delta") int delta,
-                         @QueryParam("human") boolean human,
-                         @QueryParam("timestamp") long timestamp,
-                         @QueryParam("bonus") Boolean bonus,
-                         @QueryParam("username") String username) {
-      if(playersScores == null) {
-         LOGGER.error("Unable score, players-score cache does not exist.");
-      }
-
-      String key = getKey(gameId, matchId, userId);
-
-      PlayerScore playerScore = playersScores.get(key);
-
-      if(playerScore == null) {
-         // username
-         String usernameDecoded = username.replaceAll("%20", " ");
-         playerScore = new PlayerScore(userId, matchId, gameId, usernameDecoded, human, delta, timestamp, GameStatus.PLAYING, 0);
-      } else {
-         playerScore.setScore(playerScore.getScore() + delta);
-         playerScore.setTimestamp(timestamp);
-      }
-
-      if(bonus!= null && bonus.booleanValue()) {
-         playerScore.setBonus(playerScore.getBonus() + 1);
-      }
-
-      playersScores.put(key, playerScore);
-
-      return Response.accepted().build();
-   }
-
    private Response handleGameOver(String gameId, String matchId, String userId, Long timestamp, GameStatus status) {
-      if(playersScores == null) {
-         LOGGER.error("Unable score, players-score cache does not exist.");
+      Response response = scoringServiceError();
+      if (response != null) {
+         return response;
       }
 
       String key = getKey(gameId, matchId, userId);
@@ -115,6 +140,14 @@ public class ScoringResource {
       playersScores.put(key, playerScore);
 
       return Response.accepted().build();
+   }
+
+   private Response scoringServiceError() {
+      if(playersScores == null) {
+         LOGGER.error("Unable to score, players-score cache does not exist.");
+         return Response.ok("Unable to score, players-score cache does not exist.").build();
+      }
+      return null;
    }
 
    private String getKey(String gameId, String matchId, String userId) {

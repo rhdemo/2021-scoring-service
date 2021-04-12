@@ -12,11 +12,12 @@ Health : `http GET http://localhost:8080/scoring`
 
 ### Create or Update a score
 
-`POST /scoring/g1/m1/u1?delta={delta}&human={human}&timestamp={timestamp}&bonus={bonus}`
+`POST /scoring/g1/m1/u1?delta={delta}&username={username}&human={human}&timestamp={timestamp}&bonus={bonus}`
 
 * `gameId`: Generation or id game
 * `matchId`: the match id
 * `userId`: player id that is scoring
+* `username`: the player name, " " encoded as %20
 * `delta`: increment of the score
 * `human`: `true` for humans, `false` for AI
 * `timestamp`: long milliseconds number 
@@ -24,7 +25,20 @@ Health : `http GET http://localhost:8080/scoring`
 
 Example: 
 ```bash 
-http POST 'http://localhost:8080/scoring/g1/m1/u1?delta=123&human=true&timestamp=9090898'
+http POST 'http://localhost:8080/scoring/g1/m1/u1?delta=123&username=pepe%20coco&human=true&timestamp=9090898'
+```
+
+### Get a score
+
+`GET /scoring/g1/m1/u1/score`
+
+* `gameId`: Generation or id game
+* `matchId`: the match id
+* `userId`: player id that is scoring
+
+Example:
+```bash 
+http GET 'http://localhost:8080/scoring/g1/m1/u1/score'
 ```
 
 ### Track a win
@@ -97,5 +111,5 @@ Access
 * Leaderboard: `http://localhost:8080`
 
 
-`docker commit 3a9e00bf865f quay.io/redhatdemo/2021-scoring-service`
+`docker commit e343fc7672d3 quay.io/redhatdemo/2021-scoring-service`
 `docker push quay.io/redhatdemo/2021-scoring-service`
