@@ -115,8 +115,8 @@ TIP: Use env variable `SCORING_CONFIGURE_INFINISPAN=true` to create caches
 ./run-app.sh
 ```
 Access 
-* Leaderboard: `http://localhost:8080`
+* Scoring: `http://localhost:8080`
 
 
-`docker commit 9e4a597384b3 quay.io/redhatdemo/2021-scoring-service`
+`docker commit 299942683eec quay.io/redhatdemo/2021-scoring-service`
 `docker push quay.io/redhatdemo/2021-scoring-service`
