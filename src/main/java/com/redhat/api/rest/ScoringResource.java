@@ -4,6 +4,9 @@ import com.redhat.model.GameStatus;
 import com.redhat.model.PlayerScore;
 import io.quarkus.infinispan.client.Remote;
 import org.infinispan.client.hotrod.RemoteCache;
+import org.infinispan.client.hotrod.Search;
+import org.infinispan.query.dsl.Query;
+import org.infinispan.query.dsl.QueryFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +21,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Path("/scoring")
 @Produces(MediaType.APPLICATION_JSON)
@@ -95,6 +99,24 @@ public class ScoringResource {
       }
 
       return Response.ok(playerScore, MediaType.APPLICATION_JSON_TYPE).build();
+   }
+
+   @GET
+   @Path("/{gameId}/ranking")
+   public Response finalRanking(@PathParam("gameId") String gameId,
+                                @QueryParam("max") Integer max) {
+      Response response = scoringServiceError();
+      if (response != null) {
+         return response;
+      }
+
+      QueryFactory queryFactory = Search.getQueryFactory(playersScores);
+      Query query = queryFactory.create(
+            "from com.redhat.PlayerScore p WHERE p.human=true AND p.gameId='" + gameId
+                  + "' ORDER BY p.score DESC").maxResults(max == null ? 1000 : max.intValue());
+
+      List<PlayerScore> finalRanking = query.execute().list();
+      return Response.ok(finalRanking, MediaType.APPLICATION_JSON_TYPE).build();
    }
 
    @POST
