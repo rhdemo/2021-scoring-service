@@ -12,7 +12,7 @@ Health : `http GET http://localhost:8080/scoring`
 
 ### Create or Update a score
 
-`POST /scoring/g1/m1/u1?delta={delta}&username={username}&human={human}&timestamp={timestamp}&bonus={bonus}`
+`POST /scoring/{gameId}}/{matchId}/{userId}?delta={delta}&username={username}&human={human}&timestamp={timestamp}&bonus={bonus}`
 
 * `gameId`: Generation or id game
 * `matchId`: the match id
@@ -30,7 +30,7 @@ http POST 'http://localhost:8080/scoring/g1/m1/u1?delta=123&username=pepe%20coco
 
 ### Get a score
 
-`GET /scoring/g1/m1/u1/score`
+`GET /scoring/{gameId}/{matchId}/{userId}/score`
 
 * `gameId`: Generation or id game
 * `matchId`: the match id
@@ -40,6 +40,13 @@ Example:
 ```bash 
 http GET 'http://localhost:8080/scoring/g1/m1/u1/score'
 ```
+
+### Final ranking
+
+`GET /scoring/{gameId}/ranking?max={max}`
+
+* `gameId`: Generation or id game
+* `max`: max results, default 1000
 
 ### Track a win
 
@@ -53,7 +60,7 @@ http GET 'http://localhost:8080/scoring/g1/m1/u1/score'
 Example: 
 
 ```bash 
-http POST 'http://localhost:8080/scoring/g1/m1/u1/win?timestamp=1223'
+http POST 'http://localhost:8080/scoring/{gameId}/{matchId}/{userId}/win?timestamp=1223'
 ```
 
 ### Track a loss
