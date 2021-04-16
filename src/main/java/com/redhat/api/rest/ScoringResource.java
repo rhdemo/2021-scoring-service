@@ -74,7 +74,7 @@ public class ScoringResource {
       }
 
       if(bonus!= null && bonus.booleanValue()) {
-         playerScore.setBonus(playerScore.getBonus() + 1);
+         playerScore.setBonus(playerScore.getBonus() + delta);
       }
 
       playersScores.put(key, playerScore);
