@@ -65,12 +65,15 @@ public class ScoringResource {
       PlayerScore playerScore = playersScores.get(key);
 
       if(playerScore == null) {
-         // username
-         String usernameDecoded = username != null ? username.replaceAll("%20", " ") : "";
-         playerScore = new PlayerScore(userId, matchId, gameId, usernameDecoded, human, delta, timestamp, GameStatus.PLAYING, 0);
+         playerScore = new PlayerScore(userId, matchId, gameId, "", human, delta, timestamp, GameStatus.PLAYING, 0);
       } else {
          playerScore.setScore(playerScore.getScore() + delta);
          playerScore.setTimestamp(timestamp);
+      }
+
+      if (playerScore.getUsername().isEmpty()) {
+         String usernameDecoded = username != null ? username.replaceAll("%20", " ") : "";
+         playerScore.setUsername(usernameDecoded);
       }
 
       if(bonus!= null && bonus.booleanValue()) {
