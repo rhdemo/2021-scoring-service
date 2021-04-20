@@ -118,5 +118,5 @@ Access
 * Scoring: `http://localhost:8080`
 
 
-`docker commit 299942683eec quay.io/redhatdemo/2021-scoring-service`
+`docker commit 425fe39d3ff0 quay.io/redhatdemo/2021-scoring-service`
 `docker push quay.io/redhatdemo/2021-scoring-service`
